@@ -32,6 +32,7 @@ public class user_menu {
     private void connectDatabase() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
         conn = DriverManager.getConnection(db_url);
+        conn.setAutoCommit(false);
         Selection.initializeQueryableEntities(conn);
     }
 
@@ -248,7 +249,7 @@ public class user_menu {
             oper = Selection.OPERATIONS.DELETE;
 
         } else if (command.equals(top_menu_options[3])) {  //search
-            System.out.println("Which entity would you like to search for?");
+            System.out.println("Which entity would you like to search?");
             oper = Selection.OPERATIONS.SEARCH;
 
         } else if (command.equals(top_menu_options[4])) {  //more
@@ -267,7 +268,11 @@ public class user_menu {
             return true;
         }
 
-        Selection.doOperation(sc, conn, oper);
+        try {
+            Selection.doOperation(sc, conn, oper);
+        } catch (SQLException e) {
+            System.out.println("Error occurred during rollback: " + e.getMessage());
+        }
         return true;
     }
 

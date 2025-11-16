@@ -1,6 +1,6 @@
 package osu.dbms.query;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -25,11 +25,15 @@ public class QueryDrone implements Queryable {
             columns_name[i] = rsmd.getColumnName(i+1);
             String typeName = rsmd.getColumnTypeName(i+1);
 
-            System.out.println("Column: " + columns_name[i] + ", Type: " + typeName);
+            // System.out.println("Column: " + columns_name[i] + ", Type: " + typeName);
 
             switch(typeName){
                 case "INT":
                 case "INTEGER":
+                case "TINYINT":
+                case "SMALLINT":
+                case "MEDIUMINT":
+                case "BIGINT":
                     columns_type[i] = SQL.TYPE.INT;
                     break;
                 case "REAL":
@@ -49,21 +53,66 @@ public class QueryDrone implements Queryable {
 
     public void addOp(Scanner sc, Connection conn) throws Exception {
         System.out.println("Adding a new drone record...");
-
-/*
-            String attributes[] = new String[entity.getAttributeCount()];
-            for (int i = 0; i < attributes.length; i++) {
-                System.out.println("Enter the value for " + entity.attributes_name[i] + ":");
-                attributes[i] = Utility.getLineStripped(sc);
+        int attr_cnt = columns_name.length;
+        String new_values[] = new String[attr_cnt];
+        for (int i = 0; i < attr_cnt; i++) {
+            System.out.print("Enter value for " + columns_name[i]);
+            switch (columns_type[i]) {
+                case INT:
+                    System.out.print(" (Integer): ");
+                    break;
+                case REAL:
+                    System.out.print(" (Real number): ");
+                    break;
+                case DATE:
+                    System.out.print(" (YYYY-MM-DD): ");
+                    break;
+                default:
+                    System.out.print(" (String): ");
             }
+            new_values[i] = Utility.getLineStripped(sc);
+        }
 
-            Record record = new Record(entity, attributes);
-            if(entity.addRecord(record)) {
-                System.out.println("Record added Successfully.");
-            } else {
-                System.out.println("Record could not be added.");
-            } */
+        String insert_sql = "INSERT INTO DRONE1 VALUES (?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement pstmt = conn.prepareStatement(insert_sql);
+        for (int i = 0; i < 7; i++) {
+            SQL.setArg(pstmt, i + 1, columns_type[i], new_values[i]);
+        }
+        if (pstmt.executeUpdate() > 0) {
+            System.out.println("Record added to DRONE1 successfully.");
+        } else {
+            System.out.println("Failed to add record to DRONE1.");
+        }
+        pstmt.close();
+
+        String insert_sql2 = "INSERT INTO DRONE2 VALUES (?, ?, ?, ?, ?);";
+        pstmt = conn.prepareStatement(insert_sql2);
+        SQL.setArg(pstmt, 1, columns_type[3], new_values[3]);   //Manufacturer
+        SQL.setArg(pstmt, 2, columns_type[4], new_values[4]);   //Year
+        for (int i = 7; i < 10; i++) {
+            SQL.setArg(pstmt, i - 4, columns_type[i], new_values[i]);   //Model, Name, Warranty_expiration
+        }
+        if (pstmt.executeUpdate() > 0) {
+            System.out.println("Record added to DRONE2 successfully.");
+        } else {
+            System.out.println("Failed to add record to DRONE2.");
+        }
+        pstmt.close();
+
+        String insert_sql3 = "INSERT INTO DRONE3 VALUES (?, ?, ?, ?);";
+        pstmt = conn.prepareStatement(insert_sql3);
+        SQL.setArg(pstmt, 1, columns_type[7], new_values[7]);   //Model
+        for (int i = 10; i < attr_cnt; i++) {
+            SQL.setArg(pstmt, i - 8, columns_type[i], new_values[i]);   //Max_speed, Distance_autonomy, Weight_capacity
+        }
+        if (pstmt.executeUpdate() > 0) {
+            System.out.println("Record added to DRONE3 successfully.");
+        } else {
+            System.out.println("Failed to add record to DRONE3.");
+        }
+        pstmt.close();
     }
+
     public void editOp(Scanner sc, Connection conn) throws Exception {
         System.out.println("Editing a drone record...");
         Utility.placeholder();
