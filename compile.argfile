@@ -1,8 +1,10 @@
 -sourcepath src -classpath bin -d bin 
 ./src/osu/dbms/options/MoreOp.java
+./src/osu/dbms/options/Report.java
 ./src/osu/dbms/query/Queryable.java
 ./src/osu/dbms/query/QueryDrone.java
 ./src/osu/dbms/query/Selection.java
 ./src/osu/dbms/query/SQL.java
 ./src/osu/dbms/user_menu.java
 ./src/osu/dbms/utility/Utility.java
+./src/osu/dbms/exception/MyException.java

@@ -8,10 +8,13 @@ import java.util.Scanner;
 import java.sql.Statement;
 
 import osu.dbms.utility.Utility;
+import osu.dbms.exception.MyException;
 
 public class QueryDrone implements Queryable {
     String columns_name[];
     SQL.TYPE columns_type[];
+
+
 
     public QueryDrone(Connection conn) throws SQLException{
         Statement stmt = conn.createStatement();
@@ -123,6 +126,34 @@ public class QueryDrone implements Queryable {
     }
     public void searchOp(Scanner sc, Connection conn) throws Exception {
         System.out.println("Searching drone records...");
-        Utility.placeholder();
+        System.out.println("Choose a searching criterion (enter number):");
+        System.out.println("1. Serial No\n2. Status\n3. Warehouse City\n4. Weight Capacity");
+        ResultSet rs = null;
+        String from_sql = "FROM DRONE1 NATURAL JOIN DRONE2 NATURAL JOIN DRONE3";
+
+        String choice = Utility.getTokenFromLine(sc);
+        if (choice == null) {
+            System.out.println("No choice entered. Aborting search.");
+            throw new MyException("No choice entered for searching criterion.");
+        }
+        switch (choice) {
+            case "1":
+                rs = SQL.search(conn, sc, from_sql, "Serial_no", SQL.TYPE.STR);
+                break;
+            case "2":
+                rs = SQL.search(conn, sc, from_sql, "Status", SQL.TYPE.STR);
+                break;
+            case "3":
+                rs = SQL.search(conn, sc, from_sql, "Warehouse_city", SQL.TYPE.STR);
+                break;
+            case "4":
+                rs = SQL.search(conn, sc, from_sql, "Weight_capacity", SQL.TYPE.INT, 1);
+                break;
+            default:
+                System.out.println("Invalid choice. Aborting search.");
+                throw new MyException("Invalid choice for searching criterion.");
+        }    
+        SQL.displayResultSet(rs);
+        rs.close();
     }
 }

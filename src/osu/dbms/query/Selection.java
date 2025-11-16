@@ -2,6 +2,7 @@ package osu.dbms.query;
 
 import java.util.Scanner;
 
+import osu.dbms.exception.MyException;
 import osu.dbms.utility.Utility;
 
 import java.io.IOException;
@@ -104,6 +105,7 @@ public class Selection {
         } else if (oper == OPERATIONS.SEARCH) {
             try {
                 queryable_entity.searchOp(sc, conn);
+            } catch (MyException me) { 
             } catch (Exception e) {
                 System.out.println("Error occurred during searching records: " + e.getMessage());
             }

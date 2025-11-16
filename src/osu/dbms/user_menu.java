@@ -18,11 +18,6 @@ public class user_menu {
         "Delivery of equipment", "Pickup of equipment", "Onsite service appointment", "Go back to top menu"};
     final String[] operation_menu_option = {"rent", "return", "deliver", "pickup", "appointment", "back"};
 
-    final String[] member_attributes = {"member_ID", "fname", "lname", "gender", "address", "start_date"};
-    final String[] drone_attributes = {"serial_number", "name", "model", "location", "year", "status", "warranty_expiration", "max_speed", "distance_autonomy", "weight_capacity"};
-    final String[] equipment_attributes = {"serial_number", "type", "model", "year", "status", "description", "location", "warranty_expiration", "weight", "dimensions", "renting_fee", "per-day_renting_cost"};
-
-
     final String db_url = "jdbc:sqlite:WarehouseDatabase.db";
     Connection conn = null;
 
@@ -253,11 +248,16 @@ public class user_menu {
             oper = Selection.OPERATIONS.SEARCH;
 
         } else if (command.equals(top_menu_options[4])) {  //more
+
             moreOperation();
             return true;
+            
         } else if (command.equals(top_menu_options[5])) {  //report
+
             System.out.println("Generate useful report: ");
+            Report.chooseReport(sc, conn);
             return true;
+
         } else if (command.equals(top_menu_options[6])) {  //exit
             System.out.println("Exit program");
             return false;
