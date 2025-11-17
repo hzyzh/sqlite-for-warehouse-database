@@ -45,30 +45,8 @@ public class SQL {
         }
     }
 
-   /**
-    * Search drone records based on a criterion. 
-    * "SELECT * " + from_sql + " WHERE attribute_name ( = | >= | <= ) value;"
-    * @param conn the database connection
-    * @param sc Scanner object for user input
-    * @param from_sql the FROM part for SQL query, e.g. "FROM DRONE1 NATURAL JOIN DRONE2 NATURAL JOIN DRONE3"
-    * @param attribute_name the search attribute name
-    * @param type the SQL type of the search attribute
-    * @param search_method 0 for exact match, 1 for >= , 2 for <=
-    */
-    public static ResultSet search(Connection conn, Scanner sc, String from_sql, String attribute_name, SQL.TYPE type, int search_method) throws Exception {
-        System.out.print("Searching drone records by " + attribute_name);
-        switch (search_method) {
-            case 0:
-                System.out.print(" == ");
-                break;
-            case 1:
-                System.out.print(" >= ");
-                break;
-            case 2:
-                System.out.print(" <= ");
-                break;
-        }
-        String value = Utility.getLineStripped(sc);
+    public static ResultSet search(Connection conn, String value, String from_sql, String attribute_name, TYPE type, int search_method) throws Exception {
+
         if (value == null || value.isEmpty()) {
             throw new MyException("No value entered for search.");
         }
@@ -99,6 +77,33 @@ public class SQL {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         setArg(pstmt, 1, type, value);
         return pstmt.executeQuery();
+    }
+
+   /**
+    * Search drone records based on a criterion. 
+    * "SELECT * " + from_sql + " WHERE attribute_name ( = | >= | <= ) value;"
+    * @param conn the database connection
+    * @param sc Scanner object for user input
+    * @param from_sql the FROM part for SQL query, e.g. "FROM DRONE1 NATURAL JOIN DRONE2 NATURAL JOIN DRONE3"
+    * @param attribute_name the search attribute name
+    * @param type the SQL type of the search attribute
+    * @param search_method 0 for exact match, 1 for >= , 2 for <=
+    */
+    public static ResultSet search(Connection conn, Scanner sc, String from_sql, String attribute_name, SQL.TYPE type, int search_method) throws Exception {
+        System.out.print("Searching records by " + attribute_name);
+        switch (search_method) {
+            case 0:
+                System.out.print(" == ");
+                break;
+            case 1:
+                System.out.print(" >= ");
+                break;
+            case 2:
+                System.out.print(" <= ");
+                break;
+        }
+        String value = Utility.getLineStripped(sc);
+        return search(conn, value, from_sql,  attribute_name, type, search_method);
     }
    /**
     * Exact match search records based on a criterion.

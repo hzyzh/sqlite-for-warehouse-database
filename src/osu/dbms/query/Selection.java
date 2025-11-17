@@ -86,8 +86,9 @@ public class Selection {
         else if (oper == OPERATIONS.EDIT) {
             try {
                 queryable_entity.editOp(sc, conn);
-                System.out.println("Record updated Successfully.");
+                // System.out.println("Record updated Successfully.");
                 conn.commit();
+            } catch (MyException e) {
             } catch (Exception e) {
                 System.out.println("Error occurred during editing a record: " + e.getMessage());
                 conn.rollback();
@@ -96,8 +97,9 @@ public class Selection {
         } else if (oper == OPERATIONS.DELETE) {
             try {
                 queryable_entity.deleteOp(sc, conn);
-                System.out.println("Record deleted Successfully.");
+                // System.out.println("Record deleted Successfully.");
                 conn.commit();
+            } catch (MyException e) {
             } catch (Exception e) {
                 System.out.println("Error occurred during deleting a record: " + e.getMessage());
                 conn.rollback();
