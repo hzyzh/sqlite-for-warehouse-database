@@ -1,5 +1,5 @@
 Class/
-*.db
+WarehouseDatabase.db
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
