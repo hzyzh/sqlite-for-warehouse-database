@@ -14,8 +14,8 @@ public class QueryDrone implements Queryable {
     String columns_name[];
     SQL.TYPE columns_type[];
     final String FROM_SQL = "FROM DRONE1 AS D1 "
-                + "LEFT OUTER JOIN DRONE2 AS D2 ON (D1.Manufacturer = D2.Manufacturer AND D1.Year = D2.Year) "
-                + "LEFT OUTER JOIN DRONE3 AS D3 ON D2.Model = D3.Model";
+                + "NATURAL LEFT OUTER JOIN DRONE2 AS D2 "
+                + "NATURAL LEFT OUTER JOIN DRONE3 AS D3";
 
 
     public QueryDrone(Connection conn) throws SQLException{
